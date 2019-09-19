@@ -1,0 +1,12 @@
+# don't track this directories
+bin/
+include/
+lib/
+
+# don't include this symlinks
+lib64
+
+# don't include this files
+.cfg
+.swp
+
