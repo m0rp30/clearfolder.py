@@ -7,7 +7,8 @@ the file is stored for year, month and type.
 example: 
 
 directory to watch: /home/user/  
-file:               /home/user/file.png , /home/user/file.pdf  
+file:               /home/user/file.png
+                    /home/user/file.pdf  
 result:             /home/user/Storage/2019/09/Image/file.png
                     /home/user/Storage/2019/09/Document/file.pdf
 ```
