@@ -7,6 +7,6 @@ lib/
 lib64
 
 # don't include this files
-.cfg
-.swp
-
+*.cfg
+*.swp
+.gitignore
