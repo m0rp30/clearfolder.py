@@ -28,9 +28,33 @@ from watchdog.events import FileSystemEventHandler
 from os import mkdir, path, rename, stat
 from ntpath import basename
 from filetype import guess_extension, guess_mime
-from sys import argv
+#from sys import argv
 from pathlib import Path
+import json
+import logging
 
+logging.basicConfig(filename=path.dirname(path.realpath(__file__)) + '/clearfolder.log', format='%(asctime)s %(levelname)s: %(message)s', level=logging.DEBUG)
+logging.error('Messaggio di prova')
+
+try:
+    # Get config parameters
+    with open("config.json") as config_file:
+        data =json.load(config_file)
+except Exception as e:
+    logging.error('Exception occurred', exc_info=True)
+
+# Set directory_to_watch
+directory_to_watch = data['directory_to_watch']
+if not path.isdir(directory_to_watch) or not isinstance(directory_to_watch, str):
+    logging.error("The directory_to_watch parameter isn't string or not exists")
+    quit()
+# Set time_to_sleep
+time_to_sleep = data['time_to_sleep']
+if not isinstance(time_to_sleep, int):
+    logging.error("The time_to_sleep parameter isn't int")
+    quit()
+
+''' Old block to check if parameters it's good
 directory_to_watch = ""
 try:
     if 1 < len(argv) <= 2:
@@ -47,6 +71,7 @@ try:
 except IndexError:
     print("No parameters passed")
     quit()
+'''
 
 
 class Watcher:
@@ -62,8 +87,9 @@ class Watcher:
         try:
             while True:
                 # Check every 5 seconds
-                sleep(5)
+                sleep(time_to_sleep)
         except KeyboardInterrupt:
+            logging.info('Exception occurred', exc_info=True)
             self.observer.stop()
 
         self.observer.join()
@@ -78,6 +104,7 @@ class Handler(FileSystemEventHandler):
         if event.is_directory:
             return None
         elif event.event_type == 'created':
+            logging.debug(f"The file {filename} is get to the event created")
             # Take event created
             destination = directory_to_watch + "Storage/"
             if not path.exists(destination):
@@ -136,8 +163,12 @@ class Handler(FileSystemEventHandler):
                 print(new_name)
             # Move the file to the destinations directory
             rename(filename, new_name)
+            logging.debug(f"The file {filename} is stored in {new_name}")
 
 
 if __name__ == '__main__':
-    w = Watcher()
-    w.run()
+    try:
+        w = Watcher()
+        w.run()
+    except Exception as e:
+        logging.error('Exception occurred', exc_info=True)
