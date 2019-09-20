@@ -34,7 +34,7 @@ from pathlib import Path
 import json
 import logging
 
-logging.basicConfig(filename=path.dirname(path.realpath(__file__)) + '/clearfolder.log', format='%(asctime)s %(levelname)s: %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename=path.dirname(path.realpath(__file__)) + '/clearfolder.log', format='%(asctime)s %(levelname)s: %(message)s', level=logging.WARNING)
 data = {}
 try:
     # Get config parameters
