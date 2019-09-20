@@ -4,7 +4,7 @@
     Description: This script used to move every file in a specified direcoty sored by year, month and type
         ex. /home/user/Storage/2019/09/Image/file.png
             /home/user/Storage/2019/09/Document/file.pdf
-        p.s. This scripts doesn't work for downloads directory except do you used browser chrome
+        p.s. This scripts doesn't work for downloads directory
 
     Copyright (C) 2019 Luca Canali
 
@@ -86,6 +86,7 @@ class Watcher:
 
         try:
             while True:
+                # Check every 5 seconds
                 sleep(time_to_sleep)
         except KeyboardInterrupt:
             logging.info('Exception occurred', exc_info=True)
@@ -98,12 +99,11 @@ class Handler(FileSystemEventHandler):
 
     # Get only event
     @staticmethod
-    def on_created(event):
+    def on_any_event(event):
         filename = event.src_path
-        if not path.isfile(filename) or basename(filename).split(".")[-1] == 'crdownload':
-            # This section is for directory Downloads and only work with chrome browser
-            pass
-        else:
+        if event.is_directory:
+            return None
+        elif event.event_type == 'created':
             logging.debug(f"The file {filename} is get to the event created")
             # Take event created
             destination = directory_to_watch + "Storage/"
